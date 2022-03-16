@@ -1,5 +1,5 @@
 # Makefile
-- samo wywołanie komendy make powoduje skompilowanie plików źródłowych
+- samo wywołanie komendy make powoduje skompilowanie plików źródłowych 
 - make run <nazwa_zadania> (np. make run task_a), powoduje uruchomienie danego programu (dostępne nazwy to task_a do task_e)
 - make clean
 - make tar 

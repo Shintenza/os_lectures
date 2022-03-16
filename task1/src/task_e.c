@@ -23,13 +23,16 @@ int main () {
                 exit(1);
             case 0:
                 sleep(1);
-                setpgid(0,0);
+                if(setpgid(0,0)==-1) {
+                    perror("failed to change pgid");
+                    exit(1);
+                }
                 print_ids();
                 break;
             default:
                 break;
         }
     }
-    sleep(100);
+    sleep(3);
     return 0;
 }

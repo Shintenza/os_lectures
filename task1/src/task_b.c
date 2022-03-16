@@ -8,6 +8,11 @@ int main () {
     int i; 
 
     pid_t pgid = getpgid(0);
+
+    if (pgid == -1) {
+        perror("could't get pgid!\n");
+    }
+
     printf("UID: %d, GID: %d, PID: %d, PPID: %d, PGID: %d\n", getuid(), getgid(), getpid(), getppid(), pgid);
 
     for (i=0; i<3; i++) {
@@ -17,6 +22,9 @@ int main () {
                 exit(1);
             case 0:
                 pgid = getpgid(0);
+                if (pgid == -1) {
+                    perror("could't get pgid!\n");
+                }
                 printf("UID: %d, GID: %d, PID: %d, PPID: %d, PGID: %d\n", getuid(), getgid(), getpid(), getppid(), pgid);
             default:
                 wait(NULL);
