@@ -1,6 +1,6 @@
-# ========================================================================
-# Kamil Kuziora                                          Kraków 20.03.2022
-# ========================================================================
+# =====================================================
+# Kamil Kuziora                       Kraków 20.03.2022
+# =====================================================
 
 # Ćwiczenie 2
 
@@ -15,6 +15,7 @@ Brak dodatkowych argumentów podczas wywołania powoduje użycie polecenia echo 
 ## Struktura projektu
 
 ```
+├── answers.md
 ├── bin
 │   ├── task2
 │   └── task2_out
