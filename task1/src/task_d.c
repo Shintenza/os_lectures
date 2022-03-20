@@ -4,6 +4,9 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 
+/*Kamil Kuziora 17.03.2022 Kraków*/
+/*Procesy grupowane pokoleniami*/
+
 void print_ids () {
     pid_t pgid = getpgid(0);
     if (pgid == -1)  {
@@ -23,12 +26,11 @@ int main () {
                 exit(1);
             case 0:
                 print_ids();
-                sleep(1);
                 break;
             default:
+                sleep(i);
                 break;
         }
     }
-    sleep(3);
     return 0;
 }

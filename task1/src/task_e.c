@@ -4,6 +4,9 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 
+/*Kamil Kuziora 17.03.2022 Kraków*/
+/*Procesy grupowane pokoleniami, proces potomny jest liderem swojej grupy*/
+
 void print_ids () {
     pid_t pgid = getpgid(0);
     if (pgid == -1)  {

@@ -4,6 +4,9 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 
+/*Kamil Kuziora 17.03.2022*/
+/*wywoływanie funkcji fork 3 razy; uzycie wait aby proces-rodzic zaczekal na proces potomny*/
+
 int main () {
     int i; 
 
@@ -28,6 +31,7 @@ int main () {
                 printf("UID: %d, GID: %d, PID: %d, PPID: %d, PGID: %d\n", getuid(), getgid(), getpid(), getppid(), pgid);
             default:
                 wait(NULL);
+                break;
         }
     }
     return 0;

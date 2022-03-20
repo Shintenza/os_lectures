@@ -4,6 +4,9 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 
+/*Kamil Kuziora 17.03.2022 Kraków*/
+/*Program mający na celu tworzenie procesow adoptowanych przez systemd*/
+
 void print_ids () {
     pid_t pgid = getpgid(0);
     if (pgid == -1)  {
@@ -22,8 +25,8 @@ int main () {
                 perror("fork error\n");
                 exit(1);
             case 0:
-                print_ids();
                 sleep(10);
+                print_ids();
                 break;
             default:
                 break;

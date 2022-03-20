@@ -2,8 +2,12 @@
 #include <unistd.h>
 #include <stdio.h>
 
+/*Kamil Kuziora 17.03.2022*/
+/*Program wypisujacy identyfikatory UID, GID, PID, PPID i PGID*/
+
 int main () {
     pid_t pgid = getpgid(0);
+    /*obsluga bledow*/
     if (pgid == -1) {
         perror("could't get pgid!\n");
     }

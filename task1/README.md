@@ -1,19 +1,35 @@
+# ========================================================================
+# Kamil Kuziora                                          Kraków 17.03.2022
+# ========================================================================
+
+# Struktura katalogu
+
+```
+├── answers.md          // odpowiedzi na pytania
+├── bin                 // katalog powstaje po wywołaniu make i zawiera pliki binarne
+│   ├── task_a
+│   ├── task_b
+│   ├── task_c
+│   ├── task_d
+│   └── task_e
+├── Makefile
+├── obj                 // katalog powstaje po wywołaniu make i zawiera pliki obiektowe
+│   ├── task_a.o
+│   ├── task_b.o
+│   ├── task_c.o
+│   ├── task_d.o
+│   └── task_e.o
+├── README.md
+└── src                 // katalog zawiera kody źródłowe rozwiązań
+    ├── task_a.c
+    ├── task_b.c
+    ├── task_c.c
+    ├── task_d.c
+    └── task_e.c
+```
+
 # Makefile
 - samo wywołanie komendy make powoduje skompilowanie plików źródłowych 
-- make run <nazwa_zadania> (np. make run task_a), powoduje uruchomienie danego programu (dostępne nazwy to task_a do task_e)
+- make run [nazwa_zadania] - powoduje uruchomienie pliku binarnego o podanej nazwie (dostępne nazwy: od task_a do task_e); przykładowe użycie: *make run task_a*
 - make clean
 - make tar 
-
-# Ćwiczenie 1 - przykład d
-                                        (63583,63477,63583)
-                                    /           |             \
-                    (63584,63583,63583) (63586, 63583, 63583)  (63585,63583,63583)
-                    /               |                                 |
-        (63593,63584,63583)   (63595,63584,63583)             (63594,63585,63583)
-                |
-        (63616,63593,63583)
-
-
-# Ile procesów powstanie przy n-krotnym wywolaniu funkcji fork i dlaczego?
-Odp: 2^n; jest tak, ponieważ każdorazowe wywołanie funkcji fork powoduje duplikat procesu-rodzica. W powyższym przypadu wywołaliśmy funkcję fork 3 razy
-co dało nam całkowitą liczbę procesów równą 2^3=8.
