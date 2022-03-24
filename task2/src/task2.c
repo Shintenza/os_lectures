@@ -27,13 +27,22 @@ const char* get_pids () {
     sprintf(output_msg, "UID: %d, GID: %d, PID: %d, PPID: %d, PGID: %d", getuid(), getgid(), getpid(), getppid(), pgid);
     return output_msg;
 }
-
+/*Funcka do uruchomiana zewnetrznego programu*/
+void exec_program (char *program_path, char *first_arg, char *msg) {
+    if (execlp(program_path, first_arg, msg, NULL)==-1) {
+        perror("exec error; check the given program name");
+        exit(1);
+    }
+}
 int main(int argc, char** argv) {
     int i;
     char output_msg[100];
     char program_path[100];
 
     sprintf(output_msg, "%s", get_pids());
+    sprintf(program_path, "%s%s", PATH, argv[1]);
+
+    printf("%s\n", output_msg);
 
     for (i = 0; i < FORK_LOOPS; i++) {
         switch (fork()) {
@@ -43,16 +52,11 @@ int main(int argc, char** argv) {
             case 0:
                 /*jesli uzytkownik nie podal programu zostaje uzyte echo, w przeciwnym wypadku uruchamiany jest wskazany program*/
                 if (argc < 2) {
-                    if (execlp("echo", "echo", output_msg, NULL)==-1) {
-                        perror("exec error; check the given program name");
-                        exit(1);
-                    }
+                    sprintf(output_msg, "%s", get_pids());
+                    exec_program("echo", "echo", output_msg);
                 } else {
-                    sprintf(program_path, "%s%s", PATH, argv[1]);
-                    if (execlp(program_path, argv[1], output_msg, NULL)==-1) {
-                        perror("exec error; check the given program name");
-                        exit(1);
-                    }
+                    sprintf(output_msg, "%s", get_pids());
+                    exec_program(program_path, argv[1], output_msg);
                 }
                 break;
             default:

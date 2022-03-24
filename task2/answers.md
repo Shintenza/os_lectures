@@ -1,3 +1,3 @@
 ## Ile procesów powstanie przy n-krotnym wywolaniu funkcji fork-exec jak wyżej i dlaczego?
-Przy n-krotnym wywolaniu funkcji fork-exec powstanie n procesów. Powodem takiego zachowania jest działanie polecenia exec, które zastępuje obecnie działający
-program na ten, podany przez użytkownika.
+Przy n-krotnym wywolaniu funkcji fork-exec powstanie n procesów potomnych i jeden proces-rodzic. Powodem takiego zachowania jest działanie polecenia exec, 
+które zastępuje obecnie działający program na ten, podany przez użytkownika.
