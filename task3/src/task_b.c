@@ -1,3 +1,6 @@
+#define _POSIX_C_SOURCE 200112L
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -9,10 +12,10 @@
 
 /*Makra określające położenie i nazwę uruchomianego programu za pomocą execlp*/
 #define PROGRAM_NAME "task_a"
-#define PROGRAM_PATH "./bin/"
+#define PROGRAM_PATH "./"
 
 /*Funkcja do wczytywania od użytkownika trybu działania z obsługą błędów*/
-int load_input(int argc, char **argv) {
+int load_input(int argc, char **argv, int element) {
     char *error;
     int converted_num;
     /*sprawdzenie czy użytkownik podał odpowiednią liczbę argumentów*/
@@ -20,7 +23,7 @@ int load_input(int argc, char **argv) {
         fprintf(stderr, "Nie podano sposobu obsługi sygnału\n");
         exit(1);
     }
-    converted_num = strtol(argv[1], &error, 10);
+    converted_num = strtol(argv[element], &error, 10);
 
     /*sprawdzenie czy podana wartość była liczbą*/
     if (*error!='\0') {
@@ -39,7 +42,7 @@ int main(int argc, char **argv) {
     char given_mode[2];
     char path[30];
     
-    sprintf(given_mode, "%d", load_input(argc, argv));
+    sprintf(given_mode, "%d", load_input(argc, argv, 1));
 
     /*Tworzenie scieżki do pliku binarnego*/
     sprintf(path, "%s%s", PROGRAM_PATH, PROGRAM_NAME);
@@ -49,7 +52,7 @@ int main(int argc, char **argv) {
             perror("Fork problem");
             exit(1);
         case 0:
-            if (execlp(path, PROGRAM_NAME, given_mode, NULL)==-1) {
+            if (execlp(path, PROGRAM_NAME, given_mode, argv[2], NULL)==-1) {
                 perror("exec error; check the given program name");
                 exit(1);
             }

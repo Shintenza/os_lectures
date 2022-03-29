@@ -1,12 +1,12 @@
 CC=gcc
-CFLAGS=-Wall
+CFLAGS=-Wall -std=c99 -pedantic
 PROJECT=task2
 
 OBJ_DIR=obj
 SRC_DIR=src
 BIN_DIR=bin
 
-EXECS = $(BIN_DIR)/task_a $(BIN_DIR)/task_b
+EXECS = $(BIN_DIR)/task_a $(BIN_DIR)/task_b $(BIN_DIR)/task_c $(BIN_DIR)/task_c2
 
 .PHONY: all clean
 # prevents from deleting object files
@@ -14,13 +14,13 @@ EXECS = $(BIN_DIR)/task_a $(BIN_DIR)/task_b
 all: $(EXECS) | structure
 
 $(BIN_DIR)/%: $(OBJ_DIR)/%.o | structure
-	gcc -o $@ $<
+	gcc $(CFLAGS) -o $@ $<
 
 structure:
 	mkdir -p bin obj
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	gcc -c $< -o $@
+	gcc $(CFLAGS) -c $< -o $@
 
 ifeq ($(firstword $(MAKECMDGOALS)), run)
 EXEC_NAME = $(word 2, $(MAKECMDGOALS))
