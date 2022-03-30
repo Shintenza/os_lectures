@@ -25,7 +25,7 @@ int main () {
                 perror("fork error\n");
                 exit(1);
             case 0:
-                sleep(10);
+                sleep(3);
                 print_ids();
                 break;
             default:

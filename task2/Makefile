@@ -1,13 +1,13 @@
 CC=gcc
 CFLAGS=-Wall
-PROJECT=task1
+PROJECT=task2
 
 OBJ_DIR=obj
 SRC_DIR=src
 BIN_DIR=bin
 
 EXECS = $(BIN_DIR)/task2 $(BIN_DIR)/task2_out
-.PHONY: all clean
+.PHONY: all clean tar
 # prevents from deleting object files
 .PRECIOUS: $(OBJ_DIR)/%.o
 all: $(EXECS) | structure

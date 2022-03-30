@@ -27,7 +27,7 @@ const char* get_pids () {
     sprintf(output_msg, "UID: %d, GID: %d, PID: %d, PPID: %d, PGID: %d", getuid(), getgid(), getpid(), getppid(), pgid);
     return output_msg;
 }
-/*Funcka do uruchomiana zewnetrznego programu*/
+/*Funkcja do uruchomiana zewnetrznego programu*/
 void exec_program (char *program_path, char *first_arg, char *msg) {
     if (execlp(program_path, first_arg, msg, NULL)==-1) {
         perror("exec error; check the given program name");
