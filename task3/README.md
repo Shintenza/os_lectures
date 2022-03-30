@@ -10,6 +10,7 @@ Celem tego projektu są działania związane z obsługą procesów.
 2. Użyj polecenia `./[task_name] [sposób obsługi sygnału: 0 - default, 1 - ignore, 2 - custom] [signal]`
 
 ## Struktura projektu
+```
 ├── bin
 │   ├── task_a
 │   ├── task_b
@@ -30,6 +31,7 @@ Celem tego projektu są działania związane z obsługą procesów.
     ├── task_c.c
     ├── utils.c             # zawiera funkcję do wczytywania wejścia od użytkownika
     └── utils.h 
+```
 
 ## Makefile
 - samo wywołanie komendy make powoduje skompilowanie plików źródłowych 
