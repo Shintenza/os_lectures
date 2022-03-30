@@ -5,34 +5,33 @@
 #include <stdlib.h>
 #include <wait.h>
 
-int load_input(int argc, char **argv, int element) {
-    char *error;
-    int converted_num;
-    /*sprawdzenie czy użytkownik podał odpowiednią liczbę argumentów*/
-    if (argc < 3) {
-        fprintf(stderr, "Nie podano sposobu obsługi sygnału\n");
-        exit(1);
-    }
-    converted_num = strtol(argv[element], &error, 10);
+#include "utils.h"
 
-    /*sprawdzenie czy podana wartość była liczbą*/
-    if (*error!='\0') {
-        fprintf(stderr, "Podana wartość musi być liczbą\n");
-    }
-    return converted_num;
-}
+/*======================================================================================*/
+/* Kamil Kuziora                                                       Krakow 27.03.2022*/
+/*======================================================================================*/
+/*Program ustanawia się liderem grupy, tworzy procesy potomne, ignoruje przychodzący sygnał, zarządza dziećmi i wypisuje ich status*/
 
+#define PROGRAM_NAME "task_a"
+#define PROGRAM_PATH "bin/"
+
+/*liczba wywołań komendy fork*/
 #define FORK_NUMBER 3
+
 int main (int argc, char **argv) {
     int status;
     int i;
     int given_signal = load_input(argc, argv, 2);
     pid_t waited_for;
+    char path[30];
 
+    sprintf(path, "%s%s", PROGRAM_PATH, PROGRAM_NAME);
+    /*ustawienie ignorowania sygnału*/
     if (signal(given_signal, SIG_IGN)==SIG_ERR) {
         perror("Funkcja signal poległa :(\n");
         exit(1);
     }
+    /*tworzenie procesów potomnych*/
     for (i=0; i < FORK_NUMBER; i++) {
         switch (fork()) {
             case -1:
@@ -40,7 +39,7 @@ int main (int argc, char **argv) {
                 exit(1);
                 break;
             case 0:
-                if(execlp("./task_a", "task_a", argv[1], argv[2], NULL) ==-1) {
+                if(execlp(path, PROGRAM_NAME, argv[1], argv[2], NULL) ==-1) {
                     perror("błąd w uruchomianiu programu");
                     exit(1);
                 }
@@ -49,7 +48,8 @@ int main (int argc, char **argv) {
                 break;
         }
     }
-
+    
+    /*czekanie na procesy potomne, a także zbieranie i wyświetlanie ich statusów*/
     for (i=0; i< FORK_NUMBER; i++) {
         if((waited_for = wait(&status)==-1)) {
             perror("Wait error");

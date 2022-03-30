@@ -8,30 +8,15 @@
 #include <stdlib.h>
 #include <wait.h>
 
+#include "utils.h"
 /*======================================================================================*/
 /* Kamil Kuziora                                                       Krakow 29.03.2022*/
 /*======================================================================================*/
+/*Program tworzący proces potomny, który staje się liderem swojej grupy i tworzy procesy potomne. Następnie program wysyła sygnały do całej grupy*/
 
 /*Makra określające położenie i nazwę uruchomianego programu za pomocą execlp*/
 #define PROGRAM_NAME "task_c2"
-#define PROGRAM_PATH "./"
-
-int load_input(int argc, char **argv, int element) {
-    char *error;
-    int converted_num;
-    /*sprawdzenie czy użytkownik podał odpowiednią liczbę argumentów*/
-    if (argc < 3) {
-        fprintf(stderr, "Nie podano sposobu obsługi sygnału\n");
-        exit(1);
-    }
-    converted_num = strtol(argv[element], &error, 10);
-
-    /*sprawdzenie czy podana wartość była liczbą*/
-    if (*error!='\0') {
-        fprintf(stderr, "Podana wartość musi być liczbą\n");
-    }
-    return converted_num;
-}
+#define PROGRAM_PATH "./bin/"
 
 int main (int argc, char **argv) {
     char given_mode[2];
@@ -39,7 +24,8 @@ int main (int argc, char **argv) {
 
     char path[30];
     pid_t children_pid;
-   
+  
+    /*odczytywanie sygnału*/
     given_signal = load_input(argc, argv, 2);
     /*odczytywanie trybu odpowiedzi na dany proces*/
     sprintf(given_mode, "%d", load_input(argc, argv, 1));
