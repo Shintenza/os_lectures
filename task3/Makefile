@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -std=c99 -pedantic
-PROJECT=task2
+PROJECT=task3
 
 OBJ_DIR=obj
 SRC_DIR=src

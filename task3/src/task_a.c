@@ -20,6 +20,7 @@
 /*Wlasna funkcja obslugujaca zadany jej sygnal*/
 void signal_handler (int signal) {
     /*o ile internet nie klamie dostep do sys_siglist jest zabroniony od wersji 2.32*/
+    /*https://stackoverflow.com/questions/16509614/signal-number-to-name*/
     const char *str;
     if ((str = sigabbrev_np(signal)) == NULL) {
         fprintf(stderr, "Niepoprawny sygnał");
@@ -42,26 +43,25 @@ int main (int argc, char **argv) {
         /*domyślne zachowanie w przypadku otrzymania sygnału*/
         case 0:
             if (signal(given_signal, SIG_DFL)==SIG_ERR) {
-                perror("Funkcja signal poległa :(");
+                perror("Funkcja signal poległa");
                 exit(1);
             }
-            pause();
             break;
         /*ignorowanie w przypadku otrzymania sygnału*/
         case 1:
             if (signal(given_signal, SIG_IGN)==SIG_ERR) {
-                perror("Funkcja signal poległa :(");
+                perror("Funkcja signal poległa");
                 exit(1);
             }
             break;
         case 2:
             /*własna obsługa sygnału SIGQUIT*/
             if (signal(given_signal, signal_handler)==SIG_ERR) {
-                perror("Funkcja signal poległa :(");
+                perror("Funkcja signal poległa");
                 exit(1);
             }
-            pause();
             break;
     }
+    pause();
     return 0;
 }

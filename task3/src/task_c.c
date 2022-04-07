@@ -53,7 +53,7 @@ int main (int argc, char **argv) {
             break;
         default:
             /*proces macierzysty*/
-            sleep(5);
+            sleep(3);
             /*sprawdzenie czy utworzony proces istnieje*/
             if(kill(children_pid, 0)==-1){
                 perror("Nie znaleziono procesu potomnego!");
@@ -69,7 +69,7 @@ int main (int argc, char **argv) {
                 perror("Nie udało się wysłać sygnału do grupy");
                 exit(1);
             }
-            printf("[INFO] >> wysłano sygnał\n");
+            printf("[INFO::C] >> wysłano sygnał\n");
             kill(-children_pid, given_signal);
             wait(NULL);
             break;

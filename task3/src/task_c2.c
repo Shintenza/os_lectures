@@ -55,8 +55,8 @@ int main (int argc, char **argv) {
             perror("Wait error");
             exit(1);
         }
-        printf("[INFO] >> kod powrotu: >> %d\n", status);
+        printf("[INFO::C2] >> kod powrotu: >> %d\n", status);
     }
-    printf("[INFO] >> procesy potomne zakończone!\n");
+    printf("[INFO::C2] >> procesy potomne zakończone!\n");
     return 0;
 }
