@@ -1,6 +1,7 @@
 # Kamil Kuziora                       Kraków 30.03.2022
 
-#Ćwiczenie 4
+
+## Ćwiczenie 4
 Implementacja problemu producenta-konsumenta. Proces-producent odczytuje małe porcje pliku tekstowego (w różnych odstępach czasowych) i umieszcza je w potoku 
 nienazwanym. Proces-konsument odczytuje dane z potoku i zapisuje wszystkie pobrane informacje do pliku. 
 

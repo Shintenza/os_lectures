@@ -1,17 +1,20 @@
 CC=gcc
 CFLAGS=-Wall -std=c99 -pedantic
-PROJECT=task3
+PROJECT=task5
 
 OBJ_DIR=obj
 SRC_DIR=src
 BIN_DIR=bin
 
 FIFO_NAME=fifo
+IN=payload.txt
+OUT=output.txt
 
 PROGS = consumer handler producer
 BINARIES = $(addprefix $(BIN_DIR)/, $(PROGS))
 
 .PRECIOUS: $(OBJ_DIR)/%.o
+.PHONY: all structure cmp start run clean tar
 
 all: $(BINARIES)
 
@@ -33,12 +36,14 @@ run: all
 $(EXEC_NAME):
 	./$(BIN_DIR)/handler $(IN) $(OUT)
 endif
+cmp:
+	diff -s $(IN) $(OUT)
 start:
 	mkfifo -m 644 $(FIFO_NAME)
-	alacritty -t PRODUCER -e ./bin/producer $(FIFO_NAME) payload.txt &
-	alacritty -t CONSUMER -e ./bin/consumer $(FIFO_NAME) out.txt
+	alacritty -t PRODUCER -e ./bin/producer $(FIFO_NAME) $(IN) &
+	alacritty -t CONSUMER -e ./bin/consumer $(FIFO_NAME) $(OUT)
 
 tar: clean
 	cd ../; tar cvfz $(PROJECT).tar.gz $(PROJECT)
 clean:
-	rm -rf bin obj $(FIFO_NAME)
+	rm -rf bin obj $(FIFO_NAME) $(OUT)
