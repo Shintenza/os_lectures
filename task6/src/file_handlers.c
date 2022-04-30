@@ -11,7 +11,7 @@ int open_rd(const char* file_name) {
 }
 int open_rw(const char* file_name) {
     int fd;
-    fd = open(file_name, O_WRONLY | O_TRUNC | O_APPEND, 0644);
+    fd = open(file_name, O_WRONLY | O_TRUNC | O_APPEND | O_CREAT, 0644);
     if (fd == -1) {
         perror("open failed");
         exit(1);

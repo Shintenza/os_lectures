@@ -23,18 +23,26 @@ int main (int argc, char** argv) {
     int file_number;
     sem_t* sem;
 
-    
+    /*otwarcie wcześniej utworzonego semafora*/ 
     sem = semaphore_open(sem_name);
-    for(i = 0; i < number_of_sections; i++) {
-        sem_value = semaphore_get_value(sem);
-        printf("[INFO]::[PID: %d]::[SEM_V: %d] >> przed sekcją krytyczną\n", getpid(), sem_value);
 
+    /*pętla wykonujaca się number_of_sections razy*/
+    for(i = 0; i < number_of_sections; i++) {
+        /*wydobycie wartości semafora*/
+        sem_value = semaphore_get_value(sem);
+
+        printf("[INFO]::[PID: %d]::[SEM_V: %d] >> przed sekcją krytyczną\n", getpid(), sem_value);
+        
+        /*operacja opuszczania semafora*/
         semaphore_wait(sem);
+
         /*sekcja krytyczna*/
+
         sem_value = semaphore_get_value(sem);
         sleep(rand_time());
         printf("[INFO]::[PID: %d]::[SEM_V: %d]::[ITER: %d] >> sekcja krytyczna\n", getpid(), sem_value, i);
-
+        
+        /*otwarcie pliku tekstowego, wczytanie jego zawartości i jej inkrementacja*/
         num_file = open_rd(file_name);
         read_file(num_file, read_buffer);
         close_file(num_file);
@@ -46,9 +54,12 @@ int main (int argc, char** argv) {
         num_file = open_rw(file_name);
         write_file(num_file, read_buffer);
         close_file(num_file);
+
         /*koniec sekcji krytycznej*/
+        
+        /*podnoszenie semafora po sekcji krytycznej*/
         semaphore_post(sem);
-       
+         
         sem_value = semaphore_get_value(sem);
         printf("[INFO]::[PID: %d]::[SEM_V: %d] >> po sekcji krytycznej\n", getpid(), sem_value);
     }
