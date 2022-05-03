@@ -18,6 +18,7 @@
 
 
 /*Wlasna funkcja obslugujaca zadany jej sygnal*/
+
 void signal_handler (int signal) {
     /*o ile internet nie klamie dostep do sys_siglist jest zabroniony od wersji 2.32*/
     /*https://stackoverflow.com/questions/16509614/signal-number-to-name*/
@@ -26,7 +27,8 @@ void signal_handler (int signal) {
         fprintf(stderr, "Niepoprawny sygnał");
         exit(1);
     }
-    printf("[INFO::A] >> PID: %d >> SIG%s\n", getpid(), str); }
+    printf("[INFO::A] >> PID: %d >> SIG%s\n", getpid(), str); 
+}
 
 int main (int argc, char **argv) {
     int given_mode;
@@ -65,3 +67,4 @@ int main (int argc, char **argv) {
     pause();
     return 0;
 }
+chuj;

@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
             }
             break;
         default:
-            /*Wysłanie sygnału 0 aby sprawdzić czy dany sygnał istnieje*/
+            /*Wysłanie sygnału 0 aby sprawdzić czy dany proces istnieje*/
             if (kill(child_pid, 0)==-1) {
                 perror("Nie znaleziono procesu potomnego!\n");
                 exit(1);
@@ -51,6 +51,11 @@ int main(int argc, char **argv) {
                 perror("Problem z wysłaniem sygnału :(\n");
                 exit(1);
             }
+            if(wait(NULL) == -1) {
+                perror("wait error");
+                exit(1);
+            }
             break;
     }
 }
+chuj;

@@ -59,7 +59,7 @@ int main (int argc, char** argv) {
             /*pętla odpowiedzialna za czytanie pliku i wstawianie losowo dużych fragmentów pliku tekstowego do potoku*/
             do {
                 /*losowanie wielkości porcji danych która będzie umieszczona w potoku*/
-                size = (rand() % (100 - 10 + 1)) + 10;
+                size = random_gen(10, 100);
                 /*czytanie size porcji danych z pliku źródłowego*/
                 count = read(source, buffer, size);
                 /*handlowanie ewentualnego błędu*/
@@ -75,7 +75,7 @@ int main (int argc, char** argv) {
                 sleep(random_gen(0, 3));
                 
                 /*wypisanie na ekran pobranej porcji danych, a także jej umieszczenie w potoku*/
-                if (write(1, out_msg, strlen(out_msg)) == -1 || write(filedes[1], buffer, count) == -1 ) {
+                if (count > 0 && (write(1, out_msg, strlen(out_msg)) == -1 || write(filedes[1], buffer, count) == -1 )) {
                     perror("write error");
                     exit(1);
                 }
@@ -103,9 +103,9 @@ int main (int argc, char** argv) {
                 }
                 /*tworzenie wiadomości zwrotnej i wypisanie jej na ekran*/
                 buffer[count] = '\0';
-                sprintf(out_msg, "[KONSUMENT] - %s\n", buffer);
+                sprintf(out_msg, "[CONSUMER] - %s\n", buffer);
 
-                if (write(2, out_msg, strlen(out_msg)) == -1) {
+                if (write(1, out_msg, strlen(out_msg)) == -1) {
                     perror("parent write error");
                     exit(1);
                 }
@@ -121,6 +121,10 @@ int main (int argc, char** argv) {
                 exit(1);
             }
             break;
+    }
+    if (close(source) == -1 || close(out) == -1 ) {
+        perror("couldn't close source/out file");
+        exit(1);
     }
     return 0;
 }

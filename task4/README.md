@@ -6,7 +6,8 @@ Implementacja problemu producenta-konsumenta. Proces-producent odczytuje małe p
 nienazwanym. Proces-konsument odczytuje dane z potoku i zapisuje wszystkie pobrane informacje do pliku. 
 
 ## Uruchamianie
-1. Użyj polecenia `make run task`  
+1. Użyj polecenia `make run task IN=[nazwa_pliku_wejściowego] OUT=[nazwa_pliku_wyjściowego]`  
+2. Do porównanie plików `make cmp`
 
 ## Struktura projektu
 ```

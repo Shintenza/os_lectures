@@ -108,8 +108,12 @@ int main (int argc, char** argv) {
     /*otwarcie pliku do odczytu i sprawdzenie końcowej wartości przechowywanej w NUM_FILE*/
     num_file = open_rd(NUM_FILE);
     read_file(num_file, read_buffer);
-
-    printf("[INFO] >> końcowa wartość pliku: %s\n", read_buffer);
+   
+    if (atoi(read_buffer) == process_number * section_number ) {
+        printf("[INFO] >> poprawna końcowa wartość pliku: %d\n", atoi(read_buffer));
+    } else {
+        printf("[INFO] >> niepoprawna końcowa wartość pliku: %d\n", atoi(read_buffer));
+    }
 
     /*zamknięcie nieużywanego semafora*/
     semaphore_close(sem);

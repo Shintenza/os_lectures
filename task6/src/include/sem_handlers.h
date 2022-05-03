@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
 sem_t* semaphore_create(const char* semaphore_name);
 sem_t* semaphore_open(const char* semaphore_name);

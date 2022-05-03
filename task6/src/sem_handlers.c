@@ -22,7 +22,7 @@ sem_t* semaphore_open(const char* semaphore_name) {
 void semaphore_delete(const char* semaphore_name) {
     if(sem_unlink(semaphore_name) == -1 ) {
         perror("nie udało się usunąć semafora\n");
-        exit(1);
+        _exit(1);
     }
     return;
 }
