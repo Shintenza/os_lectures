@@ -18,7 +18,8 @@ int main (int argc, char** argv) {
     sem_t* cons_sem = semaphore_open(argv[2]);
     int shm_des = mem_open(argv[3]);
     int output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-
+    
+    /*mapowanie pamięci dzielonej w przestrzeń adresową*/
     SegWrapper* smp = mem_map(shm_des, sizeof(SegWrapper));
     
     printf("[CONSUMER::INFO] >> NAZWA SEMAFORA: %s >> ADRES: %p\n", argv[1], (void*) prod_sem);
@@ -26,31 +27,39 @@ int main (int argc, char** argv) {
 
     /*główna pętla konsumenta*/
     while (1) {
+        /*opuszczenie semafora konsumenta*/
         semaphore_wait(cons_sem);
+        /*przypadek końca pliku*/
         if (smp->end_mark > 0 && (smp->buffer[smp->out_index][smp->end_mark] == '\0')) {
             printf("[CONSUMER] >> WIELKOŚĆ DANYCH: %d >> BUFF INDEX: %d >> P_SEM: %d >> K_SEM: %d >> %.*s\n",
                 smp->end_mark, smp->out_index, semaphore_get_value(prod_sem), semaphore_get_value(cons_sem), smp->end_mark, smp->buffer[smp->out_index]);
+            /*zapisanie do pliku*/
             if (write(output, smp->buffer[smp->out_index], smp->end_mark) == -1 ) {
                 perror("write error");
                 exit(1);
             }
             break;
         } else {
+            /*normalne odczytywanie z dzielonego bufora*/
             printf("[CONSUMER] >> WIELKOŚĆ DANYCH: %d >> BUFF INDEX: %d >> P_SEM: %d >> K_SEM: %d >> %.*s\n",
                 N_ELE, smp->out_index, semaphore_get_value(prod_sem), semaphore_get_value(cons_sem), N_ELE, smp->buffer[smp->out_index]);
             if (write(output, smp->buffer[smp->out_index], N_ELE) == -1 ) {
                 perror("write error");
                 exit(1);
             }
+            /*przesunięcie się w buforze*/
             smp->out_index = (smp->out_index + 1) % N_BUF;
+            /*podniesienie semafora producenta*/
             semaphore_post(prod_sem);
         }
     }
-
+    
+    /*zamknięcie pliku wyjściowego*/
     if (close(output) == -1 ) {
         perror("nie udało się zamknąć pliku wyjściowego");
         exit(1);
     }
+    /*sprzątanko*/
     semaphore_close(prod_sem);
     semaphore_close(cons_sem);
     mem_unlink(smp, sizeof(SegWrapper));
