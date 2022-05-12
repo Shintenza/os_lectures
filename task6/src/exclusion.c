@@ -40,7 +40,7 @@ int main (int argc, char** argv) {
 
         sem_value = semaphore_get_value(sem);
         sleep(rand_time());
-        printf("[INFO]::[PID: %d]::[SEM_V: %d]::[ITER: %d] >> sekcja krytyczna\n", getpid(), sem_value, i);
+        printf(">>>>[INFO]::[PID: %d]::[SEM_V: %d]::[ITER: %d] >> sekcja krytyczna\n", getpid(), sem_value, i);
         
         /*otwarcie pliku tekstowego, wczytanie jego zawartości i jej inkrementacja*/
         num_file = open_rd(file_name);

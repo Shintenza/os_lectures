@@ -68,6 +68,7 @@ int main (int argc, char** argv) {
 
     /*utworzenie semafora*/
     sem = semaphore_create(SEM_NAME);
+    printf("[MAIN::INFO] >> utworzono semafor >> ADRES: %p >> VAL: %d\n", (void*) sem, semaphore_get_value(sem));
 
     sprintf(program_path, "./bin/%s", argv[1]);
     process_number = str_to_num(argv[2]);
