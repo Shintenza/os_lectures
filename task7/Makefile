@@ -15,6 +15,7 @@ BIN_DIR=bin
 LIB_DIR=lib
 INC_DIR=$(SRC_DIR)/include
 
+IN=payload.txt
 OUT=output.txt
 
 PROGS=main producer consumer
@@ -74,6 +75,9 @@ ifeq ($(MODE), 4)
 else
 	./$(BIN_DIR)/main
 endif
+
+cmp:
+	diff -s $(IN) $(OUT)
 
 tar: clean
 	cd ../; tar cvfz $(PROJECT).tar.gz $(PROJECT)
