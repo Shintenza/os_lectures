@@ -35,7 +35,7 @@ semaforami.
 ## Synchronizacja wielu producentów i konsumentów
 
 ```
-``#define N ?                           // Rozmiar bufora
+#define N ?                           // Rozmiar bufora
 typdef struct { ... } Towar;            // Definicja typu dla jednostek towaru
 Towar bufor[N];                         // Bufor mogacy pomiescic N jednostek towaru
 int wstaw = 0, wyjmij = 0;              // Pozycje wstawiania oraz wyjmowania towaru
@@ -71,4 +71,5 @@ semaphore KONS_SWITCH = 1;              // Semafor pozwalający na działanie ty
     V(KONS_SWITCH);                     // Podnieś semafor pilnujący klientów
     V(PROD);                            // Podniesc semafor Konsumenta
     // Konsumpcja towaru
-   }`
+   }
+```
