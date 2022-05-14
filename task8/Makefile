@@ -35,9 +35,9 @@ cmp:
 	diff -s $(IN) $(OUT)
 
 start: all
-	alacritty --hold --title SERVER -e ./$(BIN_DIR)/server &
-	alacritty --hold --title CLIENT -e ./$(BIN_DIR)/client &
-	alacritty --hold --title CLIENT -e ./$(BIN_DIR)/client &
+	alacritty --title SERVER -e ./$(BIN_DIR)/server &
+	alacritty --title CLIENT -e ./$(BIN_DIR)/client &
+	alacritty --title CLIENT -e ./$(BIN_DIR)/client &
 
 tar: clean
 	cd ../; tar cvfz $(PROJECT).tar.gz $(PROJECT)
