@@ -66,7 +66,11 @@ int main(int argc, char** argv) {
         fprintf(stderr, "błąd usuwania muteksu\n");
         exit(1);
     }
-    printf("\n[INFO] >> wartość licznika: %d\n", global_counter);
+    if (global_counter == thread_n * section_n) {
+        printf("\n[INFO] otrzymano oczekiwaną wartość wynoszącą: %d\n", global_counter);
+    } else {
+        printf("\n[INFO] otrzymano niepoprawną wartość (%d)\n", global_counter);
+    }
     return 0;
 }
 
