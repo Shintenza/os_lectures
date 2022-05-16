@@ -1,93 +1,72 @@
-#include <stdio.h>
+#define _REENTRANT
+
+#include <pthread.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
 
-#define clear() printf("\033[H\033[J")
-#define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))
-
-struct CallbackArgs {
-    unsigned number_of_threads;
-    unsigned number_of_sections;
-    unsigned *counter;
-    int id;
-    pthread_mutex_t mutex;
-};
-
-unsigned random_gen(int down, int up) {
-    return (rand() % (up - down + 1)) + down;
-}
-
-void* thread_callback(void* arg) {
-    struct CallbackArgs *data = arg;
-    int id = data->id;
-    unsigned local_counter;
-    sleep(data->number_of_threads);
-
-    for (int i = 0; i < data->number_of_sections; i++) {
-
-        gotoxy(0, id + data->number_of_threads + 1);
-        printf("[PRZED]::[%d]::[ITER: %d]", id, i);
-
-        pthread_mutex_lock(&data->mutex);
-
-        gotoxy(50, id + data->number_of_threads + 1);
-
-        printf("[W]::[%d]::[ITER: %d]\n", id, i);
-        local_counter = *data->counter;
-        local_counter++;
-
-        sleep(2);
-
-        gotoxy(50, id + data->number_of_threads + 1);
-        printf("\033[2K]");
-
-        *data->counter = local_counter;
-
-        pthread_mutex_unlock(&data->mutex);
-
-        gotoxy(0, id + data->number_of_threads + 1);
-        printf("\033[K");
-        printf("[PO]::[%d]::[ITER: %d]\n", id, i);
-        fflush(stdout);
-        sleep(1);
-    }
-    return NULL;
-}
-
+#include "include/exclusion.h"
 
 int main(int argc, char** argv) {
-    if (argc < 2) {
-        fprintf(stderr, "Nieprawidłowa liczba argumentów. Składnia: [licza_wątków] [liczba sekcji krytycznych]\n");
+    /*sprawdzenie poprawnej liczby argumentów*/
+    if (argc < 3) {
+        fprintf(stderr, "[ERROR] >> nieprawidłowa liczba argumentów. Składnia: [licza_wątków] [liczba_sekcji_krytycznych]\n");
         exit(1);
     }
+    /*zmienna zawierająca licznik inkrementowany przez wątki*/
     unsigned global_counter = 0;
+
+    /*liczba tworzonych wątków, a także sekcji krytycznych*/
     unsigned thread_n = atoi(argv[1]);
     unsigned section_n = atoi(argv[2]);
-
-    pthread_t threads[atoi(argv[1])];
-
-    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     
+    /*zmienna przechowująca muteks*/
+    pthread_mutex_t mutex;
+    /*tablica identyfikatorów utworzonych wątków*/
+    pthread_t threads[atoi(argv[1])];
+    /*struktura zawierająca argumenty przekazywane funkcji realizującej wzajemne wykluczanie wątków*/
     static struct CallbackArgs args;
+
+    /*inicjowanie muteksu*/
+    if (pthread_mutex_init(&mutex, NULL) != 0 ) {
+        fprintf(stderr, "Nie udało się utworzyć muteksu\n");
+        exit(1);
+    }
+    /*wyczyszczenie ekranu i umieszczenie kursora w lewym górnym rogu*/
+    clear();
+    gotoxy(0,0);
+
+    printf("[INFO] >> zainicjowano muteks o adresie %p\n", (void *)&mutex);
+
+    /*ustawianie odpowiednich wartości dla struktury argumentów*/ 
     args.number_of_threads = thread_n;
     args.number_of_sections = section_n;
     args.mutex = mutex;
     args.counter = &global_counter;
 
-    clear();
-    gotoxy(0,0);
     for (int i = 0; i < atoi(argv[1]); i++) {
         args.id = i;
-        pthread_create(&threads[i], NULL, thread_callback, &args);
+        /*tworzenie wątków i umieszczanie ich identyfikatorów w tablicy*/
+        if (pthread_create(&threads[i], NULL, exclusion, &args) != 0){
+            fprintf(stderr, "nie udało się utworzyć wątka\n");
+        }
         printf("[INFO] >> utworzono wątek nr. %d o adresie: %ld\n", i, threads[i]);
         sleep(1);
     }
-    for (int i=0; i < atoi(argv[1]); i++) {
-        pthread_join(threads[i], NULL);
+    
+    /*oczekiwanie na zakończenie pracy wątków*/
+    for (int i=0; i < thread_n; i++) {
+        if (pthread_join(threads[i], NULL) != 0) {
+            fprintf(stderr, "błąd w wykonaniu funkcji pthread_join\n");
+            exit(1);
+        }
     }
 
-    printf("[INFO] >> wartość licznika: %d\n", global_counter);
+    if (pthread_mutex_destroy(&mutex) != 0) {
+        fprintf(stderr, "błąd usuwania muteksu\n");
+        exit(1);
+    }
+    printf("\n[INFO] >> wartość licznika: %d\n", global_counter);
     return 0;
 }
 
