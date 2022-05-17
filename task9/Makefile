@@ -7,8 +7,8 @@ SRC_DIR=src
 BIN_DIR=bin
 HEADERS_DIR=$(SRC_DIR)/include
 
-PROC_N=5
-CRYT_N=6
+PROC_N=3
+CRYT_N=4
 
 PROGS = main
 BINARIES = $(addprefix $(BIN_DIR)/, $(PROGS))

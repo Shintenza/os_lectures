@@ -40,8 +40,8 @@ cmp:
 	diff -s $(IN) $(OUT)
 start:
 	mkfifo -m 644 $(FIFO_NAME)
-	alacritty -t PRODUCER -e ./bin/producer $(FIFO_NAME) $(IN) &
-	alacritty -t CONSUMER -e ./bin/consumer $(FIFO_NAME) $(OUT)
+	alacritty --hold -t PRODUCER -e ./bin/producer $(FIFO_NAME) $(IN) &
+	alacritty --hold -t CONSUMER -e ./bin/consumer $(FIFO_NAME) $(OUT)
 
 tar: clean
 	cd ../; tar cvfz $(PROJECT).tar.gz $(PROJECT)

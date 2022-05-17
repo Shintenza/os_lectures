@@ -31,7 +31,7 @@ int main (int argc, char** argv) {
     }
 
     source = open(argv[1], O_RDONLY);
-    out = open("./output.txt", O_RDWR | O_CREAT | O_TRUNC | O_APPEND, 0644);
+    out = open(argv[2], O_RDWR | O_CREAT | O_TRUNC | O_APPEND, 0644);
 
     /*sprawdzenie czy pliki zostały poprawnie otwarte*/
     if (source == -1 || out == -1) {

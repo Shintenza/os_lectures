@@ -1,7 +1,7 @@
 # Kamil Kuziora                       Kraków 30.04.2022
 
 
-## Ćwiczenie 4
+## Ćwiczenie 6
 Implementacja wzajemnego wykluczania się procesów za pomocą semaforów nazwanych standardu POSIX
 
 ## Uruchamianie

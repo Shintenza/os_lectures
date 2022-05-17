@@ -48,4 +48,5 @@ int main (int argc, char** argv) {
         perror("consumer close error");
         exit(1);
     }
+    return 0;
 }

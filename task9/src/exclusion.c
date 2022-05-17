@@ -1,6 +1,7 @@
 #include "include/exclusion.h"
 
 #define OFFSET 4
+#define SPACING 70
 
 /*funkcja generująca losowe liczby z przedziału*/
 unsigned random_gen(int down, int up) {
@@ -18,16 +19,16 @@ void* exclusion(void* arg) {
         /*przed sekcją krytyczną*/
 
         /*zmiana kursora na linię przeznaczoną dla danego wątka*/
-        gotoxy(0, id + data->number_of_threads + OFFSET);
-        printf("[PRZED]::[%d]::[ITER: %d]", id, i);
+        printf("\033[%d;%dH[INFO]::[ID: %d]::[ITER: %d] >> sekcja prywatna\033[K", OFFSET + data->number_of_threads + id, 0, id, i);
+        fflush(stdout);
 
         /*sekcja krytyczna*/
         pthread_mutex_lock(&data->mutex);
         
-        /*przesunięcie kursora w prawo i wypisanie informacji o wejściu do sekcji krytycznej*/
-        gotoxy(50, id + data->number_of_threads + OFFSET);
-
-        printf("[W]::[%d]::[ITER: %d]\n", id, i);
+        gotoxy(SPACING, OFFSET + id + data->number_of_threads);
+        printf("\033[K");
+        printf("[IN]::[ITER %d]", i);
+        fflush(stdout);
 
         /*pobranie wartości globalnego licznika i zapisanie go w zmiennej lokalnej*/
         local_counter = *data->counter;
@@ -39,20 +40,16 @@ void* exclusion(void* arg) {
         /*aktualizacja globalnego licznika*/
         *data->counter = local_counter;
 
-        /*usunięcie informacji o byciu w sekcji krytycznej*/
-        gotoxy(50, id + data->number_of_threads + OFFSET);
-        printf("\033[2K]");
+        gotoxy(SPACING, OFFSET + data->number_of_threads + id);
+        printf("\033[K");
+        gotoxy(0, OFFSET + data->number_of_threads + id);
+        printf("\033[m");
 
         /*zwolnienie muteksu*/
         pthread_mutex_unlock(&data->mutex);
 
         /*po sekcji krytycznej*/
-        gotoxy(0, id + data->number_of_threads + OFFSET);
-        printf("\033[K");
-        printf("[PO]::[%d]::[ITER: %d]\n", id, i);
-        fflush(stdout);
 
-        sleep(1);
     }
     return NULL;
 }
