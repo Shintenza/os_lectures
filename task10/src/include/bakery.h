@@ -4,7 +4,6 @@
 
 #define clear() printf("\033[H\033[J")
 #define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))
-#define OFFSET 4
 
 typedef struct CallbackArgs {
     unsigned* global_counter;

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <string.h>
 #include "include/bakery.h"
 
 
@@ -14,6 +15,7 @@ int main (int argc, char** argv) {
         exit(1);
     }
 
+    int return_val;
     /*liczba wątków odczytana od użytkownika*/
     int n_threads = atoi(argv[1]);
     /*liczba sekcji krytycznych odczytana od użytkownika*/
@@ -39,8 +41,8 @@ int main (int argc, char** argv) {
     for (int i = 0; i < n_threads; i++){
         args.id = i;
         /*tworzenie wątków i umieszczanie ich identyfikatorów w tablicy*/
-        if (pthread_create(&threads[i], NULL, bakery, &args) != 0){
-            fprintf(stderr, "nie udało się utworzyć wątka\n");
+        if ((return_val = pthread_create(&threads[i], NULL, bakery, &args)) != 0){
+            fprintf(stderr, "nie udało się utworzyć wątku: %s\n", strerror(return_val));
         }
         printf("[INFO] >> utworzono wątek nr. %d o adresie: %ld\n", i, threads[i]);
         sleep(1);
@@ -48,8 +50,8 @@ int main (int argc, char** argv) {
 
     /*oczekiwanie na zakończenie pracy wątków*/
     for (int i=0; i < n_threads; i++) {
-        if (pthread_join(threads[i], NULL) != 0) {
-            fprintf(stderr, "błąd w wykonaniu funkcji pthread_join\n");
+        if ((return_val = pthread_join(threads[i], NULL)) != 0) {
+            fprintf(stderr, "błąd w wykonaniu funkcji pthread_join: %s\n", strerror(return_val));
             exit(1);
         }
     }

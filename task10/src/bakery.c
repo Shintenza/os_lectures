@@ -1,6 +1,6 @@
 #include "include/bakery.h"
-#define OFFSET 4
 #define SPACING 80
+#define OFFSET 3
 
 /*funkcja generująca losowe liczby z przedziału*/
 unsigned random_gen(int down, int up) {
@@ -29,21 +29,21 @@ void* bakery(void* data) {
 
     for (int i = 0; i < args->n_sections; i++) {
         /* SEKCJA PRYWATNA*/
-        printf("\033[%d;%dH[INFO]::[ID: %d]::[ITER: %d] >> sekcja prywatna\033[K", OFFSET +id, 0, id, i);
+        printf("\033[%d;%dH[INFO]::[ID: %d]::[ITER: %d] >> sekcja prywatna\033[K", args->n_threads + OFFSET +id, 0, id, i);
         fflush(stdout);
 
         args->choosing[id] = 1;
         args->number[id] = get_max(args->number, args->n_threads) + 1;
         args->choosing[id] = 0;
 
-        /*zmiana kursora na linię przeznaczoną dla danego wątka*/
-        for (int j = 0; j < args->n_sections; j++) {
+        /*zmiana kursora na linię przeznaczoną dla danego wątku*/
+        for (int j = 0; j < args->n_threads; j++) {
             while(args->choosing[j]);
             while(args->number[j] != 0 && (args->number[j] < args->number[id] || (args->number[j] == args->number[id] && j < id)));
         }
 
         /*SEKCJA KRYTYCZNA*/
-        gotoxy(SPACING, OFFSET + id);
+        gotoxy(SPACING, args->n_threads + OFFSET + id);
         printf("\033[K");
         printf("[IN]::[ITER %d]", i);
         fflush(stdout);
@@ -54,9 +54,9 @@ void* bakery(void* data) {
 
         /*losowy czas oczekiwania*/
         sleep(random_gen(1,3));
-        gotoxy(SPACING, OFFSET + id);
+        gotoxy(SPACING, args->n_threads + OFFSET + id);
         printf("\033[K");
-        gotoxy(0, OFFSET + id);
+        gotoxy(0, args->n_threads + OFFSET + id);
         printf("\033[m");
         
         /*ustawienie globalnej watości licznika na powiększoną o 1*/
