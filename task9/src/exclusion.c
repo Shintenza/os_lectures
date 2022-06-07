@@ -1,4 +1,5 @@
 #include "include/exclusion.h"
+#include <string.h>
 
 #define OFFSET 4
 #define SPACING 70
@@ -13,6 +14,7 @@ void* exclusion(void* arg) {
     struct CallbackArgs *data = arg;
     int id = data->id;
     unsigned local_counter;
+    int return_value;
     sleep(data->number_of_threads);
 
     for (int i = 0; i < data->number_of_sections; i++) {
@@ -23,7 +25,10 @@ void* exclusion(void* arg) {
         fflush(stdout);
 
         /*sekcja krytyczna*/
-        pthread_mutex_lock(&data->mutex);
+        if ((return_value = pthread_mutex_lock(&data->mutex)) != 0) {
+            fprintf(stderr, "mutex_lock error: %s\n", strerror(return_value));
+            exit(1);
+        }
         
         gotoxy(SPACING, OFFSET + id + data->number_of_threads);
         printf("\033[K");
@@ -46,10 +51,12 @@ void* exclusion(void* arg) {
         printf("\033[m");
 
         /*zwolnienie muteksu*/
-        pthread_mutex_unlock(&data->mutex);
+        if ((return_value = pthread_mutex_unlock(&data->mutex)) != 0) {
+            fprintf(stderr, "mutex_unlock error: %s\n", strerror(return_value));
+            exit(1);
+        }
 
         /*po sekcji krytycznej*/
-
     }
     return NULL;
 }

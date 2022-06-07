@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "include/exclusion.h"
 
@@ -26,10 +27,11 @@ int main(int argc, char** argv) {
     pthread_t threads[atoi(argv[1])];
     /*struktura zawierająca argumenty przekazywane funkcji realizującej wzajemne wykluczanie wątków*/
     static struct CallbackArgs args;
+    int return_value;
 
     /*inicjowanie muteksu*/
-    if (pthread_mutex_init(&mutex, NULL) != 0 ) {
-        fprintf(stderr, "Nie udało się utworzyć muteksu\n");
+    if ((return_value = pthread_mutex_init(&mutex, NULL)) != 0 ) {
+        fprintf(stderr, "Nie udało się utworzyć muteksu: %s\n", strerror(return_value));
         exit(1);
     }
     /*wyczyszczenie ekranu i umieszczenie kursora w lewym górnym rogu*/
@@ -47,8 +49,8 @@ int main(int argc, char** argv) {
     for (int i = 0; i < atoi(argv[1]); i++) {
         args.id = i;
         /*tworzenie wątków i umieszczanie ich identyfikatorów w tablicy*/
-        if (pthread_create(&threads[i], NULL, exclusion, &args) != 0){
-            fprintf(stderr, "nie udało się utworzyć wątka\n");
+        if ((return_value = pthread_create(&threads[i], NULL, exclusion, &args)) != 0){
+            fprintf(stderr, "nie udało się utworzyć wątku: %s\n", strerror(return_value));
         }
         printf("[INFO] >> utworzono wątek nr. %d o adresie: %ld\n", i, threads[i]);
         sleep(1);
@@ -56,14 +58,14 @@ int main(int argc, char** argv) {
     
     /*oczekiwanie na zakończenie pracy wątków*/
     for (int i=0; i < thread_n; i++) {
-        if (pthread_join(threads[i], NULL) != 0) {
-            fprintf(stderr, "błąd w wykonaniu funkcji pthread_join\n");
+        if ((return_value = pthread_join(threads[i], NULL)) != 0) {
+            fprintf(stderr, "błąd w wykonaniu funkcji pthread_join: %s\n", strerror(return_value));
             exit(1);
         }
     }
 
-    if (pthread_mutex_destroy(&mutex) != 0) {
-        fprintf(stderr, "błąd usuwania muteksu\n");
+    if ((return_value = pthread_mutex_destroy(&mutex)) != 0) {
+        fprintf(stderr, "błąd usuwania muteksu %s\n", strerror(return_value));
         exit(1);
     }
     if (global_counter == thread_n * section_n) {
